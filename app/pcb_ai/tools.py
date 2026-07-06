@@ -54,17 +54,24 @@ def _load_config_paths() -> dict[str, str]:
 
 
 def _find_kicad_bin_dir() -> Path | None:
-    """Busca el directorio bin de la instalación de KiCad más reciente."""
-    program_files = os.environ.get("ProgramFiles", r"C:\Program Files")
-    kicad_root = Path(program_files) / "KiCad"
-    if not kicad_root.is_dir():
+    """Busca el directorio bin de la instalación de KiCad más reciente.
+
+    Cubre instalación por máquina (Program Files) y por usuario (LOCALAPPDATA).
+    """
+    roots = [
+        Path(os.environ.get("ProgramFiles", r"C:\Program Files")) / "KiCad",
+        Path(os.environ.get("LOCALAPPDATA", "")) / "Programs" / "KiCad",
+    ]
+    candidates: list[Path] = []
+    for root in roots:
+        if root.is_dir():
+            candidates.extend(
+                d for d in root.iterdir() if d.is_dir() and (d / "bin").is_dir()
+            )
+    if not candidates:
         return None
-    versions = sorted(
-        (d for d in kicad_root.iterdir() if d.is_dir() and (d / "bin").is_dir()),
-        key=lambda d: d.name,
-        reverse=True,
-    )
-    return versions[0] / "bin" if versions else None
+    latest = max(candidates, key=lambda d: d.name)
+    return latest / "bin"
 
 
 def discover_tool(name: str, required: bool, config_paths: dict[str, str]) -> ToolInfo:

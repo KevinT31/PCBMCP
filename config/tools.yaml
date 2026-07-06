@@ -8,13 +8,13 @@ discovered:
     version: git version 2.54.0.windows.1
     status: OK
   kicad-cli:
-    path: null
-    version: null
-    status: MISSING
+    path: C:\Users\kevin\AppData\Local\Programs\KiCad\10.0\bin\kicad-cli.exe
+    version: 10.0.3
+    status: OK
   kicad-python:
-    path: null
-    version: null
-    status: MISSING
+    path: C:\Users\kevin\AppData\Local\Programs\KiCad\10.0\bin\python.exe
+    version: 3.11.5
+    status: OK
   ngspice:
     path: null
     version: null
