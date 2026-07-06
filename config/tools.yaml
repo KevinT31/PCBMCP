@@ -1,0 +1,30 @@
+discovered:
+  python:
+    path: C:\PCBMCP\.venv\Scripts\python.EXE
+    version: Python 3.12.5
+    status: OK
+  git:
+    path: C:\Program Files\Git\cmd\git.EXE
+    version: git version 2.54.0.windows.1
+    status: OK
+  kicad-cli:
+    path: null
+    version: null
+    status: MISSING
+  kicad-python:
+    path: null
+    version: null
+    status: MISSING
+  ngspice:
+    path: null
+    version: null
+    status: MISSING
+  java:
+    path: C:\Program Files\Common Files\Oracle\Java\javapath\java.EXE
+    version: java version "21.0.9" 2025-10-21 LTS
+    status: OK
+  uv:
+    path: C:\Users\kevin\.local\bin\uv.EXE
+    version: uv 0.11.25 (1fc7de7c4 2026-06-26 x86_64-pc-windows-msvc)
+    status: OK
+paths: {}
