@@ -1,0 +1,471 @@
+{
+  "$defs": {
+    "BoardConstraints": {
+      "additionalProperties": false,
+      "properties": {
+        "max_width_mm": {
+          "exclusiveMinimum": 0,
+          "title": "Max Width Mm",
+          "type": "number"
+        },
+        "max_height_mm": {
+          "exclusiveMinimum": 0,
+          "title": "Max Height Mm",
+          "type": "number"
+        },
+        "layers": {
+          "enum": [
+            1,
+            2,
+            4,
+            6
+          ],
+          "title": "Layers",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "max_width_mm",
+        "max_height_mm",
+        "layers"
+      ],
+      "title": "BoardConstraints",
+      "type": "object"
+    },
+    "Constraints": {
+      "additionalProperties": false,
+      "properties": {
+        "board": {
+          "$ref": "#/$defs/BoardConstraints"
+        },
+        "electrical": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Electrical",
+          "type": "array"
+        },
+        "mechanical": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Mechanical",
+          "type": "array"
+        }
+      },
+      "required": [
+        "board"
+      ],
+      "title": "Constraints",
+      "type": "object"
+    },
+    "CriticalNet": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "net_class": {
+          "enum": [
+            "power_critical",
+            "high_current",
+            "differential",
+            "clock",
+            "analog_sensitive",
+            "switching"
+          ],
+          "title": "Net Class",
+          "type": "string"
+        },
+        "rules": {
+          "description": "Regla de diseño explícita para esta net",
+          "title": "Rules",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "net_class",
+        "rules"
+      ],
+      "title": "CriticalNet",
+      "type": "object"
+    },
+    "FunctionalBlock": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "purpose": {
+          "title": "Purpose",
+          "type": "string"
+        },
+        "interfaces": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Interfaces",
+          "type": "array"
+        },
+        "notes": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Notes"
+        }
+      },
+      "required": [
+        "name",
+        "purpose"
+      ],
+      "title": "FunctionalBlock",
+      "type": "object"
+    },
+    "Interface": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "usb2_fs",
+            "usb2_hs",
+            "i2c",
+            "spi",
+            "uart",
+            "swd",
+            "jtag",
+            "gpio",
+            "analog_in",
+            "pwm",
+            "can",
+            "onewire",
+            "other"
+          ],
+          "title": "Type",
+          "type": "string"
+        },
+        "connector": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Connector"
+        },
+        "speed": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Speed"
+        },
+        "notes": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Notes"
+        }
+      },
+      "required": [
+        "name",
+        "type"
+      ],
+      "title": "Interface",
+      "type": "object"
+    },
+    "Manufacturing": {
+      "additionalProperties": false,
+      "properties": {
+        "target_fab": {
+          "title": "Target Fab",
+          "type": "string"
+        },
+        "assembly": {
+          "enum": [
+            "manual",
+            "smt_service",
+            "mixed"
+          ],
+          "title": "Assembly",
+          "type": "string"
+        },
+        "min_trace_mm": {
+          "exclusiveMinimum": 0,
+          "title": "Min Trace Mm",
+          "type": "number"
+        },
+        "min_clearance_mm": {
+          "exclusiveMinimum": 0,
+          "title": "Min Clearance Mm",
+          "type": "number"
+        },
+        "min_drill_mm": {
+          "exclusiveMinimum": 0,
+          "title": "Min Drill Mm",
+          "type": "number"
+        }
+      },
+      "required": [
+        "target_fab",
+        "assembly",
+        "min_trace_mm",
+        "min_clearance_mm",
+        "min_drill_mm"
+      ],
+      "title": "Manufacturing",
+      "type": "object"
+    },
+    "PowerInput": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "connector": {
+          "title": "Connector",
+          "type": "string"
+        },
+        "voltage_nominal_v": {
+          "title": "Voltage Nominal V",
+          "type": "number"
+        },
+        "voltage_range": {
+          "$ref": "#/$defs/VoltageRange"
+        },
+        "max_current_a": {
+          "exclusiveMinimum": 0,
+          "title": "Max Current A",
+          "type": "number"
+        },
+        "protection": {
+          "description": "Protecciones requeridas, p.ej. ESD, inversión de polaridad, sobrecorriente",
+          "items": {
+            "type": "string"
+          },
+          "title": "Protection",
+          "type": "array"
+        }
+      },
+      "required": [
+        "name",
+        "connector",
+        "voltage_nominal_v",
+        "voltage_range",
+        "max_current_a"
+      ],
+      "title": "PowerInput",
+      "type": "object"
+    },
+    "PowerRail": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "voltage_v": {
+          "title": "Voltage V",
+          "type": "number"
+        },
+        "tolerance_pct": {
+          "exclusiveMinimum": 0,
+          "maximum": 20,
+          "title": "Tolerance Pct",
+          "type": "number"
+        },
+        "max_current_a": {
+          "exclusiveMinimum": 0,
+          "title": "Max Current A",
+          "type": "number"
+        },
+        "source": {
+          "description": "Nombre del power input o del bloque regulador que genera este rail",
+          "title": "Source",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "voltage_v",
+        "tolerance_pct",
+        "max_current_a",
+        "source"
+      ],
+      "title": "PowerRail",
+      "type": "object"
+    },
+    "Project": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "revision": {
+          "minLength": 1,
+          "title": "Revision",
+          "type": "string"
+        },
+        "purpose": {
+          "minLength": 1,
+          "title": "Purpose",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "revision",
+        "purpose"
+      ],
+      "title": "Project",
+      "type": "object"
+    },
+    "Verification": {
+      "additionalProperties": false,
+      "properties": {
+        "required_simulations": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Required Simulations",
+          "type": "array"
+        },
+        "required_tests": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Required Tests",
+          "type": "array"
+        }
+      },
+      "title": "Verification",
+      "type": "object"
+    },
+    "VoltageRange": {
+      "additionalProperties": false,
+      "properties": {
+        "min_v": {
+          "title": "Min V",
+          "type": "number"
+        },
+        "max_v": {
+          "title": "Max V",
+          "type": "number"
+        }
+      },
+      "required": [
+        "min_v",
+        "max_v"
+      ],
+      "title": "VoltageRange",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "project": {
+      "$ref": "#/$defs/Project"
+    },
+    "power_inputs": {
+      "items": {
+        "$ref": "#/$defs/PowerInput"
+      },
+      "minItems": 1,
+      "title": "Power Inputs",
+      "type": "array"
+    },
+    "power_rails": {
+      "items": {
+        "$ref": "#/$defs/PowerRail"
+      },
+      "minItems": 1,
+      "title": "Power Rails",
+      "type": "array"
+    },
+    "interfaces": {
+      "items": {
+        "$ref": "#/$defs/Interface"
+      },
+      "title": "Interfaces",
+      "type": "array"
+    },
+    "functional_blocks": {
+      "items": {
+        "$ref": "#/$defs/FunctionalBlock"
+      },
+      "minItems": 1,
+      "title": "Functional Blocks",
+      "type": "array"
+    },
+    "constraints": {
+      "$ref": "#/$defs/Constraints"
+    },
+    "critical_nets": {
+      "items": {
+        "$ref": "#/$defs/CriticalNet"
+      },
+      "title": "Critical Nets",
+      "type": "array"
+    },
+    "component_preferences": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Component Preferences",
+      "type": "array"
+    },
+    "forbidden_components": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Forbidden Components",
+      "type": "array"
+    },
+    "manufacturing": {
+      "$ref": "#/$defs/Manufacturing"
+    },
+    "verification": {
+      "$ref": "#/$defs/Verification"
+    }
+  },
+  "required": [
+    "project",
+    "power_inputs",
+    "power_rails",
+    "functional_blocks",
+    "constraints",
+    "manufacturing",
+    "verification"
+  ],
+  "title": "DesignSpec",
+  "type": "object"
+}

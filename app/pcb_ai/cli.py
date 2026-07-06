@@ -6,14 +6,18 @@ import typer
 from rich.console import Console
 from rich.table import Table
 
+from pathlib import Path
+
 from pcb_ai import __version__
-from pcb_ai.tools import discover_all, write_tools_yaml
+from pcb_ai.tools import PROJECT_ROOT, discover_all, write_tools_yaml
 
 app = typer.Typer(
     name="pcb-ai",
     help="Pipeline agéntico de EDA: requisitos → esquemático → ERC → PCB → DRC → fabricación.",
     no_args_is_help=True,
 )
+spec_app = typer.Typer(help="Validación y schema de la especificación de diseño.")
+app.add_typer(spec_app, name="spec")
 console = Console()
 
 
@@ -65,6 +69,58 @@ def doctor(
         )
         raise typer.Exit(code=1)
     console.print("[green]Entorno base OK.[/green]")
+
+
+@spec_app.command("validate")
+def spec_validate(
+    path: Path = typer.Argument(
+        Path("spec/design_spec.yaml"), help="Ruta al design_spec.yaml"
+    ),
+) -> None:
+    """Valida la especificación de diseño contra el schema y las reglas cruzadas."""
+    from pydantic import ValidationError
+
+    from pcb_ai.spec import load_spec
+
+    target = path if path.is_absolute() else PROJECT_ROOT / path
+    if not target.exists():
+        console.print(f"[red]No existe: {target}[/red]")
+        raise typer.Exit(code=2)
+    try:
+        spec = load_spec(target)
+    except ValidationError as exc:
+        console.print(f"[red]Spec inválida ({exc.error_count()} errores):[/red]")
+        for err in exc.errors():
+            loc = ".".join(str(p) for p in err["loc"])
+            console.print(f"  [yellow]{loc or '(raíz)'}[/yellow]: {err['msg']}")
+        raise typer.Exit(code=1)
+    except ValueError as exc:
+        console.print(f"[red]Spec inválida:[/red] {exc}")
+        raise typer.Exit(code=1)
+
+    console.print(
+        f"[green]Spec válida:[/green] {spec.project.name} rev {spec.project.revision} — "
+        f"{len(spec.power_rails)} rails, {len(spec.functional_blocks)} bloques, "
+        f"{len(spec.critical_nets)} nets críticas"
+    )
+
+
+@spec_app.command("schema")
+def spec_schema(
+    out: Path = typer.Option(Path("spec/schema.json"), help="Archivo de salida"),
+) -> None:
+    """Exporta el JSON Schema de la especificación de diseño."""
+    import json
+
+    from pcb_ai.spec import export_json_schema
+
+    target = out if out.is_absolute() else PROJECT_ROOT / out
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text(
+        json.dumps(export_json_schema(), indent=2, ensure_ascii=False),
+        encoding="utf-8",
+    )
+    console.print(f"[green]Schema exportado a {target}[/green]")
 
 
 if __name__ == "__main__":
