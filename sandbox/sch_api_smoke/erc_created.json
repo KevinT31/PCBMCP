@@ -1,0 +1,97 @@
+{
+    "$schema": "https://schemas.kicad.org/erc.v1.json",
+    "coordinate_units": "mm",
+    "date": "2026-07-06T01:29:20",
+    "ignored_checks": [
+        {
+            "description": "Global label only appears once in the schematic",
+            "key": "single_global_label"
+        },
+        {
+            "description": "Four connection points are joined together",
+            "key": "four_way_junction"
+        },
+        {
+            "description": "SPICE model issue",
+            "key": "simulation_model_issue"
+        },
+        {
+            "description": "Assigned footprint doesn't match footprint filters",
+            "key": "footprint_filter"
+        }
+    ],
+    "included_severities": [
+        "error",
+        "warning"
+    ],
+    "kicad_version": "10.0.3",
+    "sheets": [
+        {
+            "path": "/",
+            "uuid_path": "/cc924548-28b5-4949-808c-7326c96b4b77",
+            "violations": [
+                {
+                    "description": "Pin not connected",
+                    "items": [
+                        {
+                            "description": "Symbol R1 Pin 1 [Passive, Line]",
+                            "pos": {
+                                "x": 1.0033,
+                                "y": 0.9652
+                            },
+                            "uuid": "08ee8be8-30d0-4534-80ff-a9d315ca20d2"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "pin_not_connected"
+                },
+                {
+                    "description": "Pin not connected",
+                    "items": [
+                        {
+                            "description": "Symbol R2 Pin 2 [Passive, Line]",
+                            "pos": {
+                                "x": 1.2954,
+                                "y": 1.0414
+                            },
+                            "uuid": "d0256ae7-c8c6-4378-8bcf-3f4adcd5c313"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "pin_not_connected"
+                },
+                {
+                    "description": "La configuración actual no incluye la biblioteca de símbolos 'Device'",
+                    "items": [
+                        {
+                            "description": "Símbolo R1 [R]",
+                            "pos": {
+                                "x": 1.0033,
+                                "y": 1.0033
+                            },
+                            "uuid": "cf9f571d-f75e-4d0e-adf9-455fc268ef34"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "La configuración actual no incluye la biblioteca de símbolos 'Device'",
+                    "items": [
+                        {
+                            "description": "Símbolo R2 [R]",
+                            "pos": {
+                                "x": 1.2954,
+                                "y": 1.0033
+                            },
+                            "uuid": "25e2416a-06da-4356-9261-dfde2dfe7730"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                }
+            ]
+        }
+    ],
+    "source": "created.kicad_sch"
+}

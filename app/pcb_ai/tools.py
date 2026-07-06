@@ -121,7 +121,9 @@ def _known_location(name: str) -> Path | None:
         "kicad-cli": [kicad_bin / "kicad-cli.exe"] if kicad_bin else [],
         "kicad-python": [kicad_bin / "python.exe"] if kicad_bin else [],
         "ngspice": [
-            Path(r"C:\Tools\ngspice\Spice64\bin\ngspice.exe"),
+            # ngspice_con.exe es la variante batch/consola; ngspice.exe abre GUI
+            Path(os.environ.get("LOCALAPPDATA", "")) / "Programs" / "ngspice" / "Spice64" / "bin" / "ngspice_con.exe",
+            Path(r"C:\Tools\ngspice\Spice64\bin\ngspice_con.exe"),
         ],
     }
     for path in candidates.get(name, []):

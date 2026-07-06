@@ -34,8 +34,13 @@ irreversible** (sin sincronización bidireccional, que es donde nace el drift):
 design_spec.yaml ──validate──► arquitectura eléctrica (docs) ──► selección componentes (evidencia)
       │
       ▼ (handoff único por revisión)
-GENERADOR DE ESQUEMÁTICO (Python: kicad-sch-api ▸ fallback plantillas S-expr)
+GENERADOR DE ESQUEMÁTICO (Python: kicad-sch-api SOLO en modo creación ▸ fallback plantillas S-expr)
       │  pipeline defensivo: generar → kicad-cli sch upgrade → sch erc --format json → export pdf
+      │  REGLA (TESTED 2026-07-06, reports/smoke/kicad_sch_api_roundtrip.md):
+      │  · crear archivos nuevos: APTO (parseables por KiCad 10)
+      │  · editar .kicad_sch v10 existentes: NO APTO (roundtrip cambia 5638/3545 líneas
+      │    y altera ERC 43→90) → el loop de reparación edita el MODELO del generador
+      │    y re-emite el archivo completo; nunca se parchea el archivo en sitio
       ▼
 PROYECTO KICAD = SOURCE OF TRUTH
       │
@@ -79,7 +84,7 @@ afirmarse citando el reporte generado.
 | Deuda | Detonante de revisión |
 |---|---|
 | SWIG pcbnew desaparece en KiCad 11 | Release KiCad 11 (~mar-2027): migrar a IPC API headless |
-| kicad-sch-api declara KiCad 7/8 | Smoke test roundtrip v10 (bloqueante antes de adoptar) |
+| kicad-sch-api: RESUELTO por smoke test (2026-07-06) — apto solo creación, no edición in-place | Nueva versión de kicad-sch-api que declare KiCad 10 |
 | FreeRouting DSN headless vía SWIG | Smoke test; si falla, routing no crítico también manual |
 | Java 25 solo para FreeRouting | Instalar Temurin 25 aislado, sin tocar JAVA_HOME global |
 
