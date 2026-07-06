@@ -1,0 +1,31 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.egg-info/
+.pytest_cache/
+dist/
+build/
+
+# KiCad — backups y archivos autogenerados que no son fuente
+*-backups/
+*.kicad_prl
+fp-info-cache
+*.lck
+_autosave-*
+*.kicad_sch-bak
+*.kicad_pcb-bak
+*.bak
+
+# Salidas regenerables (las de manufacturing/ SÍ se versionan)
+artifacts/tmp/
+reports/tmp/
+
+# Secretos
+.env
+*.secret
+credentials*.json
+
+# SO
+Thumbs.db
+Desktop.ini
