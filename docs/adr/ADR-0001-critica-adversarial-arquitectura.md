@@ -118,4 +118,18 @@ arquitectura queda aprobada sin nueva revisión.
 
 ### Resultado del contraste
 
-_Pendiente de que termine el task de Codex — se completa en esta misma sesión._
+**BLOQUEADO por entorno (2026-07-07), no por cuota.** Cuatro intentos:
+
+1-2. (2026-07-06) cuota de ChatGPT agotada.
+3. (2026-07-07, `task` vía rescue) el sandbox de Codex CLI falló con
+   `helper_unknown_error: apply deny-read ACLs` — bloqueó TODA lectura del workspace.
+4. (2026-07-07, `adversarial-review` oficial) mismo fallo: todos los comandos de
+   Codex mueren con exit -1 antes de ejecutar PowerShell. Codex respondió
+   honestamente que sin poder leer los documentos no tiene base para hallazgos.
+
+Conclusión: es un defecto del sandbox de Codex CLI en esta máquina Windows
+(aplicación de ACLs de lectura), independiente del prompt y de la cuota. Se
+suspende el reintento para no crear loops (política CLAUDE.md). **La crítica
+propia de este ADR queda como revisión de registro.** Reabrir contraste cuando
+el plugin/CLI de Codex corrija el sandbox en Windows (o configurando su
+sandbox_mode), idealmente antes de cerrar la fase de fabricación.
