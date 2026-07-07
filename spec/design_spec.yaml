@@ -1,0 +1,114 @@
+# Especificación de diseño — placa demostradora del pipeline agéntico EDA
+# Validada por spec/schema.json (pcb-ai spec validate). Revisión A.
+project:
+  name: demo-vigia
+  revision: A
+  purpose: >-
+    Placa demostradora end-to-end del pipeline pcb-ai: alimentación USB-C 5 V a
+    3.3 V con protección, MCU ARM Cortex-M moderno con debug SWD, LED y botón de
+    usuario, y un sensor de temperatura I2C como periférico.
+
+power_inputs:
+  - name: usb_c_5v
+    connector: "USB-C 2.0 receptáculo 16 pines, solo alimentación (CC1/CC2 con pull-down 5.1k)"
+    voltage_nominal_v: 5.0
+    voltage_range: { min_v: 4.5, max_v: 5.5 }
+    max_current_a: 0.5
+    protection:
+      - "sobrecorriente: PPTC resettable 500 mA en VBUS"
+      - "ESD/transitorios: TVS unidireccional en VBUS tras el PPTC"
+
+power_rails:
+  - name: VBUS_5V
+    voltage_v: 5.0
+    tolerance_pct: 10
+    max_current_a: 0.5
+    source: usb_c_5v
+  - name: +3V3
+    voltage_v: 3.3
+    tolerance_pct: 5
+    max_current_a: 0.3
+    source: regulador_3v3
+
+interfaces:
+  - name: swd_debug
+    type: swd
+    connector: "header 1x5 2.54 mm (3V3, SWDIO, SWCLK, NRST, GND)"
+    notes: "Programación y debug; debe permitir bring-up sin bootloader"
+  - name: i2c_bus
+    type: i2c
+    speed: "100 kHz (standard mode)"
+    notes: "Pull-ups a +3V3 en la placa (valor definido en selección de componentes)"
+  - name: gpio_led
+    type: gpio
+    notes: "LED de usuario, activo alto, corriente limitada por resistencia serie"
+  - name: gpio_boton
+    type: gpio
+    notes: "Botón de usuario a GND con pull-up y filtro RC de rebote"
+
+functional_blocks:
+  - name: entrada_usb_power
+    purpose: "Conector USB-C solo-alimentación con detección de sink (pull-downs CC) y protección PPTC + TVS"
+    interfaces: []
+  - name: regulador_3v3
+    purpose: "LDO 5 V → 3.3 V con condensadores de entrada/salida según datasheet; genera el rail +3V3"
+    interfaces: []
+  - name: mcu
+    purpose: "MCU ARM Cortex-M moderno; ejecuta la aplicación, expone SWD, I2C, LED y botón"
+    interfaces: [swd_debug, i2c_bus, gpio_led, gpio_boton]
+  - name: sensor_temperatura
+    purpose: "Sensor de temperatura digital I2C como periférico demostrador"
+    interfaces: [i2c_bus]
+  - name: ui_led
+    purpose: "LED indicador de usuario con resistencia limitadora"
+    interfaces: [gpio_led]
+  - name: ui_boton
+    purpose: "Botón táctil de usuario con pull-up y RC de rebote"
+    interfaces: [gpio_boton]
+
+constraints:
+  board:
+    max_width_mm: 50
+    max_height_mm: 50
+    layers: 2
+  electrical:
+    - "Desacoplo: 100 nF por pin de alimentación del MCU + bulk local; valores finales según datasheet"
+    - "NRST con condensador a GND según datasheet del MCU"
+    - "Todos los rails deben ser medibles: test point o pad accesible en VBUS_5V y +3V3"
+  mechanical:
+    - "Cuatro taladros de montaje M2.5 en las esquinas"
+    - "Conector USB-C en el borde de la placa"
+
+critical_nets:
+  - name: VBUS_5V
+    net_class: power_critical
+    rules: "Ancho de pista >= 0.5 mm; recorrido corto conector → PPTC → TVS → LDO"
+  - name: +3V3
+    net_class: power_critical
+    rules: "Ancho de pista >= 0.4 mm; desacoplo cerca de cada consumidor"
+
+component_preferences:
+  - "MCU ARM Cortex-M en producción activa (lanzado <= 5 años), package soldable a mano (TSSOP/LQFP)"
+  - "Componentes disponibles en catálogo JLCPCB/LCSC con stock verificable"
+  - "Pasivos 0603 donde sea posible"
+  - "Símbolo y footprint presentes en las librerías oficiales de KiCad 10"
+forbidden_components:
+  - "Componentes EOL o NRND"
+  - "Packages BGA o QFN sin pines accesibles (placa de 2 capas, soldadura manual/mixta)"
+  - "AMS1117 (calidad de clones no trazable; elegir LDO con datasheet de fabricante único)"
+
+manufacturing:
+  target_fab: "JLCPCB 2 capas, 1.6 mm FR-4, HASL"
+  assembly: mixed
+  min_trace_mm: 0.2
+  min_clearance_mm: 0.2
+  min_drill_mm: 0.3
+
+verification:
+  required_simulations:
+    - regulador_3v3
+  required_tests:
+    - "ERC sin violaciones no justificadas (reporte JSON citado)"
+    - "DRC sin violaciones no justificadas (reporte JSON citado)"
+    - "verify-spec: rails, interfaces y nets críticas presentes en el proyecto KiCad"
+    - "Bring-up: continuidad VBUS_5V y +3V3, programación por SWD, lectura del sensor I2C"
