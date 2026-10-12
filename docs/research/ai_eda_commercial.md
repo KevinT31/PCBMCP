@@ -91,7 +91,7 @@ Filosóficamente es lo más cercano al pipeline del usuario (código → esquem�
 - `VERIFIED` (review eddiesamuels) Diseño por código con DSL propio ("Zener"), exporta a KiCad; buen tooling de visualización y pedido; integración con servicios de IA. Aún inmaduro. Veredicto: **vigilar**, no integrar.
 
 ### tscircuit — open source, relevante
-- `VERIFIED` Circuitos como componentes React/TypeScript; MIT/open source; registry de paquetes npm; **importa/exporta KiCad** (incl. librerías vía KiCad PCM); documentación oficial de "circuit generation with AI" y un **MCP server del registry** — es decir, integración directa con agentes tipo Claude Code/Codex (demo pública de Adafruit, mayo-2026).
+- `VERIFIED` Circuitos como componentes React/TypeScript; MIT/open source; registry de paquetes npm; **importa/exporta KiCad** (incl. librerías vía KiCad PCM); documentación oficial de "circuit generation with AI" y un **MCP server del registry** — es decir, integración directa con asistentes de automatización EDA (demo pública de Adafruit, mayo-2026).
 - `INFERRED` Autorouting propio aún cuestionado (review independiente). Veredicto: **integrar ahora** como pieza open source complementaria (no comercial).
 
 ### atopile — open source, relevante
