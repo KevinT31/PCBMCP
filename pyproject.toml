@@ -1,7 +1,7 @@
 [project]
 name = "pcb-ai"
 version = "0.1.0"
-description = "Pipeline agéntico de EDA: requisitos → esquemático → ERC → simulación → PCB → DRC → fabricación (KiCad + Claude Code)"
+description = "Pipeline agéntico de EDA: requisitos → esquemático → ERC → simulación → PCB → DRC → fabricación (KiCad y herramientas de validación reproducibles)"
 requires-python = ">=3.12"
 dependencies = [
     "typer>=0.15",

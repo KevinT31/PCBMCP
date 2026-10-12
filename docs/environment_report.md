@@ -23,8 +23,6 @@
 | Java | 21.0.9 LTS (Oracle) | javapath — suficiente para FreeRouting (requiere Java moderno) |
 | Docker | 29.2.0 | Docker Desktop |
 | winget | 1.29.280 | — |
-| Claude Code | 2.1.201 | orquestador |
-| Codex CLI | presente | `%APPDATA%\npm\codex.ps1` (plugin oficial activo) |
 
 ## Herramientas EDA ausentes (VERIFIED por búsqueda en PATH y Program Files)
 
@@ -38,12 +36,11 @@
 Sin paquetes EDA previos (no hay skidl, kiutils, kicad-*). Presente `click 8.4.2` en el Python global.
 **Decisión:** todo lo del proyecto irá en un venv propio (uv) para no tocar el Python global.
 
-## Claude Code / MCP
+## Integraciones de desarrollo y MCP
 
-- `~/.claude/` completo (settings, plugins, commands). Sin `.claude/` ni `.mcp.json` en `C:\PCBMCP` (proyecto limpio).
-- `~/.claude.json` no parseó como JSON con ConvertFrom-Json (probablemente muy grande o con codificación particular) — INFERRED; no se detectaron MCPs globales de EDA. No se modificará configuración global: los MCP del proyecto irán en `.mcp.json` local.
-- Plugins activos relevantes: superpowers, codex (plugin oficial OpenAI), episodic-memory.
-- Subagentes: se usarán agentes nativos de Claude Code (Task/Agent). Se evaluará crear `.claude/agents/` persistentes para los roles A–K.
+- El inventario inicial no identificó servidores MCP globales de EDA. La configuración local del proyecto se mantuvo separada de las preferencias globales del equipo.
+- Las tareas de revisión y automatización deben tener instrucciones reproducibles, evidencia de ejecución y límites explícitos para cualquier herramienta con capacidad de escritura.
+- Los perfiles de responsabilidad técnica están en `docs/engineering_roles.md`.
 
 ## Riesgos identificados
 

@@ -1,8 +1,8 @@
 # Arquitectura del sistema agéntico EDA — rev A 2026-07-07
 
 > Estado: REV A — crítica adversarial propia aplicada
-> (`docs/adr/ADR-0001-critica-adversarial-arquitectura.md`); contraste con Codex en
-> curso, sus hallazgos se incorporan al mismo ADR.
+> (`docs/adr/ADR-0001-critica-adversarial-arquitectura.md`); contraste adicional
+> bloqueado por entorno, documentado en el mismo ADR.
 > Base de evidencia: `docs/tooling_decision_matrix.md`.
 
 ## 1. Decisión central: source of truth híbrido explícito por fases (opción E)
@@ -77,15 +77,15 @@ PROYECTO KICAD = SOURCE OF TRUTH
       └─ Fabricación:   kicad-cli pcb export gerbers/drill/pos + validaciones de paquete
 ```
 
-**Roles del LLM vs deterministas:** Claude Code (y subagentes) proponen, generan código y
-clasifican reportes; **toda validación eléctrica pasa por herramientas deterministas**
+**Funciones asistidas vs deterministas:** las herramientas de asistencia pueden proponer,
+generar código y clasificar reportes (ver `docs/engineering_roles.md`); **toda validación eléctrica pasa por herramientas deterministas**
 (kicad-cli, ngspice, scripts de cálculo con unidades). Un resultado "verde" solo puede
 afirmarse citando el reporte generado.
 
 ## 3. Capa MCP (reducida por ADR-0001 H4)
 
 - **Seeed kicad-mcp-server**: capa de LECTURA + ERC/DRC. Tools de escritura bloqueadas
-  por `permissions.deny` en `.claude/settings.json`. Único MCP del plan activo.
+  mediante restricciones del cliente MCP, pendientes de verificar en cada entorno. Único MCP del plan activo.
 - **mixelpixx KiCAD-MCP-Server v2.3.1 (pineado)**: **DIFERIDO**. Escribe con su propio
   serializador — misma clase de riesgo que descalificó a kicad-sch-api para edición
   in-place — y añade un tercer escritor potencial. Solo se instalará si aparece una
@@ -116,8 +116,8 @@ afirmarse citando el reporte generado.
 ## 6. Validación de esta arquitectura
 
 1. ✔ Crítica adversarial propia (2026-07-07): hallazgos y decisiones en
-   `docs/adr/ADR-0001-critica-adversarial-arquitectura.md`. Contraste con Codex en
-   curso; sus hallazgos se incorporan al mismo ADR.
+   `docs/adr/ADR-0001-critica-adversarial-arquitectura.md`. El contraste adicional
+   quedó bloqueado por el entorno; detalles en el mismo ADR.
 2. Pendiente: smoke tests locales de §5 (FreeRouting DSN; lib_symbols embebidos del
    generador — se cierra con el primer esquemático del demostrador).
 3. El demostrador end-to-end es la prueba final: si una etapa no puede completarse

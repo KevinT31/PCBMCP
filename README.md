@@ -23,4 +23,4 @@ El esquema actual está en `hardware/demo-vigia/`. El generador protege los arch
 - El ERC del esquema entregado tiene **cero infracciones** con KiCad 10. El modelo usa el símbolo base `Sensor_Temperature:LM75C` para el componente `LM75BD`, ya que `LM75B` es un alias que el generador no embebe de forma idéntica a la biblioteca.
 - El PCB, la simulación completa y el paquete de fabricación aún no están implementados. No fabricar desde este repositorio sin completar esas etapas.
 
-La arquitectura y las decisiones de componentes están en `docs/`; las pruebas de humo y los reportes están en `reports/`.
+La arquitectura y las decisiones de componentes están en `docs/`; las pruebas de humo y los reportes están en `reports/`. Las responsabilidades de revisión e ingeniería se describen en [`docs/engineering_roles.md`](docs/engineering_roles.md).

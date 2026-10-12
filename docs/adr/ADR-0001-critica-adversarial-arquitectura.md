@@ -1,11 +1,8 @@
 # ADR-0001 — Crítica adversarial de la arquitectura (rev provisional 2026-07-06)
 
 - **Fecha:** 2026-07-07
-- **Estado:** Aceptado (crítica propia de Claude; contraste con Codex en curso — ver §Contraste)
-- **Contexto:** `docs/architecture.md` quedó marcada PROVISIONAL pendiente de crítica
-  adversarial. El usuario decidió (2026-07-06): Claude critica ahora, Codex contrasta
-  cuando su cuota lo permita. Este ADR registra los hallazgos, su severidad y las
-  decisiones aplicadas a `docs/architecture.md`.
+- **Estado:** Aceptado (revisión inicial completada; contraste independiente bloqueado por el entorno).
+- **Contexto:** `docs/architecture.md` quedó provisional hasta una revisión adversarial y un contraste independiente. Este ADR registra los hallazgos, su severidad y las decisiones aplicadas.
 
 ## Hallazgo 1 — CRÍTICO: re-emisión completa vs ediciones manuales post-handoff
 
@@ -109,27 +106,10 @@ con el primer esquemático real del demostrador.
 - **Tope de 5 iteraciones:** se mantiene como tope duro; ESTANCADO suele disparar antes.
 - **kicad-cli como columna de validación:** sin objeciones; es la parte más sólida.
 
-## Contraste con Codex
+## Contraste independiente (julio de 2026)
 
-Revisión adversarial de Codex lanzada 2026-07-07 (task en background). Cuando llegue:
-se registran aquí los hallazgos que difieran o se sumen, con decisión explícita
-aplicar/ignorar. Si Codex no aporta hallazgos nuevos de severidad ≥ media, la
-arquitectura queda aprobada sin nueva revisión.
+Se intentó una segunda revisión mediante una herramienta de línea de comandos externa. No se obtuvo una revisión técnica válida: dos intentos iniciales no pudieron continuar por restricciones de cuota y dos intentos posteriores fallaron antes de acceder a los documentos.
 
-### Resultado del contraste
+El error observado fue `helper_unknown_error: apply deny-read ACLs`: el aislamiento de procesos en Windows bloqueó las lecturas necesarias y los comandos finalizaron con código -1 antes de PowerShell. Por tanto, **no corresponde declarar completada una validación independiente**.
 
-**BLOQUEADO por entorno (2026-07-07), no por cuota.** Cuatro intentos:
-
-1-2. (2026-07-06) cuota de ChatGPT agotada.
-3. (2026-07-07, `task` vía rescue) el sandbox de Codex CLI falló con
-   `helper_unknown_error: apply deny-read ACLs` — bloqueó TODA lectura del workspace.
-4. (2026-07-07, `adversarial-review` oficial) mismo fallo: todos los comandos de
-   Codex mueren con exit -1 antes de ejecutar PowerShell. Codex respondió
-   honestamente que sin poder leer los documentos no tiene base para hallazgos.
-
-Conclusión: es un defecto del sandbox de Codex CLI en esta máquina Windows
-(aplicación de ACLs de lectura), independiente del prompt y de la cuota. Se
-suspende el reintento para no crear loops (política CLAUDE.md). **La crítica
-propia de este ADR queda como revisión de registro.** Reabrir contraste cuando
-el plugin/CLI de Codex corrija el sandbox en Windows (o configurando su
-sandbox_mode), idealmente antes de cerrar la fase de fabricación.
+La revisión inicial de este ADR continúa como referencia técnica. El contraste debe reintentarse en un entorno con acceso de lectura verificado, antes de cerrar la fase de fabricación.

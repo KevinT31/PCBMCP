@@ -1,6 +1,6 @@
 # Auditoría de servidores MCP para KiCad (julio 2026)
 
-**Autor:** mcp-scout-security · **Fecha:** 2026-07-06 · **Entorno objetivo:** Windows 11 Home x64, 16 GB RAM, Claude Code, Python 3.12.5, Node 22, uv. KiCad aún no instalado.
+**Autor:** mcp-scout-security · **Fecha:** 2026-07-06 · **Entorno objetivo:** Windows 11 Home x64, 16 GB RAM, cliente MCP, Python 3.12.5, Node 22, uv. KiCad aún no instalado.
 
 **Método:** código fuente clonado (`git clone --depth 1` en `%TEMP%\mcp-scout`), API de GitHub (stars/issues/fechas), issues reales y docs oficiales de KiCad. No se instaló ni configuró nada.
 
@@ -38,7 +38,7 @@ Conclusión para elegir versión de KiCad: **KiCad 9 o 10** cubren los cuatro me
 | ¿Requiere KiCad abierto? | No | No (recomienda cerrarlo al editar) | No con SWIG; sí con IPC | Sí para funciones IPC; no para archivo/cli (INFERRED) | No |
 | KiCad soportado | 9+ (README) | 8+, recomienda 9/10 (VERIFIED README) | 9 y 10 (VERIFIED README/changelog) | 9 y 10 (VERIFIED Dockerfiles/fork docs) | 9 (INFERRED) |
 | Windows | Parcial: `open_project` NO soporta win32 (VERIFIED código) | Sí | Sí, "fully supported", setup-windows.ps1 (VERIFIED) | Sí, CI en windows-2025 (VERIFIED ci.yml) | Sin evidencia |
-| Claude Code | Compatible MCP genérico | Sí (trae CLAUDE.md) | Soportado explícitamente (VERIFIED README) | Soportado explícitamente | Compatible genérico |
+| cliente MCP | Compatible MCP genérico | Sí (trae archivo de instrucciones del cliente) | Soportado explícitamente (VERIFIED README) | Soportado explícitamente | Compatible genérico |
 | Acceso a red | No | No | **Sí: jlcsearch.tscircuit.com + JLCPCB** (VERIFIED código) | Catálogo JLCPCB por defecto; Nexar/DigiKey/Mouser solo con credenciales (VERIFIED README) | No |
 | Telemetría | No encontrada (VERIFIED grep) | No encontrada (VERIFIED grep) | No encontrada (VERIFIED grep) | **OFF por defecto**, OTel opt-in con scrubbing de secretos (VERIFIED código) | No encontrada |
 | Riesgo destacado | Vulnerabilidad abierta sin respuesta (#57) | Edición corrompe render de símbolos en KiCad 10 (#9 abierto) | Corrupción sch en KiCad 10 en <2.3.0 (arreglada, VERIFIED changelog) | Proyecto de 5 semanas, 1 mantenedor, Python ≥3.13 | Estancado, alcance mínimo |
@@ -75,11 +75,11 @@ Conclusión para elegir versión de KiCad: **KiCad 9 o 10** cubren los cuatro me
 ### 3.3 mixelpixx/KiCAD-MCP-Server — RECOMENDADO COMO SUITE COMPLETA
 - **Repo:** https://github.com/mixelpixx/KiCAD-MCP-Server · MIT · 1 454★ · 234 forks · v2.3.1 (6 jul 2026) · push el mismo día del informe → **el más activo del ecosistema** (VERIFIED API/releases).
 - **Arquitectura:** servidor MCP en Node/TypeScript (`@modelcontextprotocol/sdk`) que lanza un proceso Python persistente (`kicad_interface.py`); backend dual **SWIG (default, headless) / IPC kipy (con GUI, sincronización en vivo)** con autodetección y variable `KICAD_BACKEND` (VERIFIED `factory.py`, `server.ts`).
-- **Requisitos:** KiCad 9+, Node 18+, Python 3.9+ (usa el Python de KiCad para pcbnew). Windows 10/11 "fully supported" con `setup-windows.ps1`; Claude Code listado como cliente soportado (VERIFIED README + scripts presentes).
+- **Requisitos:** KiCad 9+, Node 18+, Python 3.9+ (usa el Python de KiCad para pcbnew). Windows 10/11 "fully supported" con `setup-windows.ps1`; cliente MCP listado como cliente soportado (VERIFIED README + scripts presentes).
 - **Herramientas (VERIFIED `src/tools/registry.ts`):** ~25 directas (`create_project`, `open_project`, `save_project`, `snapshot_project`, `place_component`, `route_trace`, `sync_schematic_to_board`…) + ~92 enrutadas en 12 categorías: board (9), component (8), **export (27 formatos:** Gerber, drill, IPC-2581, ODB++, IPC-D-356, GenCAD, PDF, SVG, DXF, STEP/3D, VRML, BOM, netlist, pos), drc (8: `run_drc`, `get_drc_violations`, `check_clearance`, net classes), schematic (25: crear/editar/conectar/anotar/netlist), library (4), symbol_pins (2), hierarchy (2), layout (3), batch (6), routing (2), autoroute Freerouting (4, requiere Java/Docker opcional). No localicé un tool `run_erc` (VERIFIED registry; ERC ausente).
 - **Protección de escritura (VERIFIED `kicad_interface.py`):** auto-save con **backups rotativos con timestamp en `.mcp-backups/` (conserva 20)**; `save_project` **rechaza sobrescribir ediciones externas** hechas fuera del MCP (#244→#289 cerrado).
 - **Historial de corrupción (VERIFIED changelog + issues):** versiones <2.3.0 podían **corromper esquemáticos KiCad 10** (bloques de instancia incompletos: arrastrar un símbolo podía crashear KiCad; #220/#221/#256). v2.3.0 lo arregló con escritura "byte-equivalente a eeschema" según changelog (la afirmación byte-equivalente es UNVERIFIED). El proyecto es notablemente transparente documentando sus propios bugs.
-- **Seguridad:** los `exec()` del lado TS solo validan el intérprete Python configurado (`--version`, `import pcbnew`), no exponen ejecución arbitraria vía tools (VERIFIED `server.ts:356-440`). **Acceso a red:** búsqueda de componentes contra `jlcsearch.tscircuit.com` (proxy de terceros, no JLCPCB directo) y descarga de footprints JLCPCB (VERIFIED `jlcsearch.py`, `jlcpcb_downloader.py`) → consultas de componentes salen a un servidor de terceros. Sin telemetría detectada (VERIFIED grep). Issue abierto #305 "Harden MCP request handling" (auto-auditoría con Codex). Superficie de ~120 tools = superficie de ataque/error grande.
+- **Seguridad:** los `exec()` del lado TS solo validan el intérprete Python configurado (`--version`, `import pcbnew`), no exponen ejecución arbitraria vía tools (VERIFIED `server.ts:356-440`). **Acceso a red:** búsqueda de componentes contra `jlcsearch.tscircuit.com` (proxy de terceros, no JLCPCB directo) y descarga de footprints JLCPCB (VERIFIED `jlcsearch.py`, `jlcpcb_downloader.py`) → consultas de componentes salen a un servidor de terceros. Sin telemetría detectada (VERIFIED grep). Issue abierto #305 "Harden MCP request handling" (revisión automatizada). Superficie de ~120 tools = superficie de ataque/error grande.
 
 ### 3.4 oaslananka/kicad-mcp (paquete `kicad-mcp-pro`) — EMERGENTE, EN OBSERVACIÓN
 - **Repo canónico:** https://github.com/oaslananka/kicad-mcp (el repo `oaslananka/kicad-mcp-pro` de las búsquedas devuelve 404; migrado desde el monorepo `kicad-studio-kit` — VERIFIED). PyPI/npm: `kicad-mcp-pro` v3.19.0 (5 jul 2026). MIT. **17★, creado 2026-05-31** (VERIFIED API).
@@ -101,7 +101,7 @@ Conclusión para elegir versión de KiCad: **KiCad 9 o 10** cubren los cuatro me
 
 ## 4. Auditoría de seguridad transversal
 
-1. **Ninguno sandboxea el filesystem.** Todos aceptan rutas arbitrarias y operan con los permisos del usuario (VERIFIED en los 3 principales; lamaalrajih tiene incluso un validador escrito pero muerto — issue #57). Mitigación: sandbox por convención (directorio de trabajo dedicado + git) y permisos de herramienta en Claude Code (`permissions.deny`/`ask` para tools de escritura).
+1. **Ninguno sandboxea el filesystem.** Todos aceptan rutas arbitrarias y operan con los permisos del usuario (VERIFIED en los 3 principales; lamaalrajih tiene incluso un validador escrito pero muerto — issue #57). Mitigación: sandbox por convención (directorio de trabajo dedicado + git) y permisos de herramienta en cliente MCP (`permissions.deny`/`ask` para tools de escritura).
 2. **Ejecución de comandos:** ninguno expone un tool de "ejecutar comando arbitrario". Los subprocess van a `kicad-cli`/Python con listas de args fijas, sin `shell=True` (VERIFIED lamaalrajih, Seeed, mixelpixx). El riesgo real es indirecto: rutas de intérprete configurables por env (`KICAD_PYTHON`) — quien controle el env del servidor controla qué binario se ejecuta (INFERRED).
 3. **Red:** Seeed y lamaalrajih = cero red. mixelpixx llama a `jlcsearch.tscircuit.com` (tercero) y JLCPCB al usar tools de sourcing — tus búsquedas de componentes salen de tu máquina (VERIFIED). kicad-mcp-pro consulta el catálogo JLCPCB por defecto. Si eso incomoda: no invocar esas categorías o bloquear los dominios.
 4. **Telemetría:** ninguna activa por defecto en ningún candidato (VERIFIED greps; en kicad-mcp-pro explícitamente opt-in con scrubbing).
@@ -117,7 +117,7 @@ Conclusión para elegir versión de KiCad: **KiCad 9 o 10** cubren los cuatro me
 ### Top 2
 
 **#1 — mixelpixx/KiCAD-MCP-Server v2.3.1** (suite completa: lectura + escritura + DRC + exportación + autoroute)
-Justificación: único con mantenimiento diario, comunidad real (1.4k★), Windows first-class, Claude Code soportado, backups automáticos y protección no-clobber. Sus bugs de escritura existieron pero se corrigen rápido y con transparencia.
+Justificación: único con mantenimiento diario, comunidad real (1.4k★), Windows first-class, cliente MCP soportado, backups automáticos y protección no-clobber. Sus bugs de escritura existieron pero se corrigen rápido y con transparencia.
 
 **#2 — Seeed-Studio/kicad-mcp-server** (capa de lectura/validación de bajo riesgo)
 Justificación: superficie pequeña y legible, ERC+DRC vía kicad-cli (que a mixelpixx le falta el ERC), cero red, mantenedor corporativo. Usar SOLO sus tools de lectura/validación; su edición experimental se desactiva/ignora.
@@ -132,7 +132,7 @@ Justificación: superficie pequeña y legible, ERC+DRC vía kicad-cli (que a mix
 
 **Fase 1 — Solo lectura (Seeed):**
 3. Instalar Seeed en el Python embebido de KiCad (`pip install -e .` según su README) y registrarlo en `.mcp.json` del proyecto (scope proyecto, transporte stdio).
-4. En Claude Code, `permissions.deny` para `add_component_from_library`, `add_wire`, `add_label`, `setup_pcb_layout`, `create_kicad_project` (sus tools de escritura).
+4. Restringir desde el cliente MCP el acceso a las operaciones de escritura: `add_component_from_library`, `add_wire`, `add_label`, `setup_pcb_layout`, `create_kicad_project` (sus tools de escritura).
 5. Probar sobre un proyecto de ejemplo de KiCad: `get_schematic_info` → `list_schematic_nets` → `run_erc` → `run_drc`. Criterio de éxito: resultados coherentes con la GUI y cero modificaciones (verificar `git status` limpio).
 
 **Fase 2 — Escritura en sandbox (mixelpixx):**
