@@ -94,7 +94,7 @@ No existe vía oficial de escritura programática de esquemáticos en KiCad 10 (
 | **kicad-skip** (psychogenic) | v0.2.5 (feb-2024), último commit abr-2024 | Parser S-expr genérico; probado con formato ~v7/v8 | **Sin mantenimiento 2+ años**; 22 issues abiertos | Fallback utilizable con validación |
 | **kiutils** (mvnmgrx) | v1.4.8 (feb-2024) | "KiCad 6.0 and up" (en la práctica ≤7/8 parcial) | **Estancado 2,5 años**; dataclasses rígidas rompen con campos nuevos de 9/10 | Evitar para v10 (INFERRED) |
 | **S-expressions directas** (sexpdata / plantillas) | n/a | Total (tú controlas el formato) | Coste de desarrollo; hay que replicar UUIDs, `lib_symbols`, instancias | Base sólida para casos simples |
-| **circuit-synth** | repo actualizado mar-2026; v0.12.x | Python→KiCad y KiCad→Python bidireccional; optimizado para Claude Code; incluye MCP `mcp-kicad-sch-api` | Proyecto joven, un mantenedor principal | **Muy relevante** para pipeline agéntico |
+| **circuit-synth** | repo actualizado mar-2026; v0.12.x | Python→KiCad y KiCad→Python bidireccional; con integración para asistentes de automatización; incluye MCP `mcp-kicad-sch-api` | Proyecto joven, un mantenedor principal | **Muy relevante** para pipeline agéntico |
 
 - kicad-sch-api: https://pypi.org/project/kicad-sch-api/ · https://github.com/circuit-synth/kicad-sch-api
 - kicad-skip: https://github.com/psychogenic/kicad-skip
@@ -168,7 +168,7 @@ winget: **no existe paquete freerouting** (verificado con `winget search`). Inst
 |---|---|---|---|---|
 | **atopile** | v0.15.7 (23-abr-2026), releases semanales; **requiere Python ≥3.14,<3.15** (¡no corre en el 3.12.5 instalado; uv puede instalar 3.14!) | Lenguaje declarativo `.ato` → compila y **actualiza .kicad_pcb nativo**; picking paramétrico de componentes; ecuaciones de diseño | Nativa (KiCad para layout, opcional para compilar) | Pre-1.0, muy activo, VS Code ext, VERIFIED |
 | **tscircuit** | Muy activo 2026 (demos con agentes IA en mayo-2026) | Circuitos en React/TypeScript → PCB, esquemático, Gerbers, **KiCad, DSN**, netlists; import/export KiCad; librerías instalables vía KiCad PCM | Import y export KiCad + DSN | Activo; autorouting/DRC aún en desarrollo, VERIFIED |
-| **circuit-synth** | v0.12.x, actualizado mar-2026 | Circuitos en Python ↔ KiCad bidireccional; **diseñado explícitamente para Claude Code** (agentes, BOM, FMEA); publica kicad-sch-api y su MCP | .kicad_sch real (7/8 declarado) | Joven, un equipo pequeño, VERIFIED |
+| **circuit-synth** | v0.12.x, actualizado mar-2026 | Circuitos en Python ↔ KiCad bidireccional; **orientado a automatización asistida** (agentes, BOM, FMEA); publica kicad-sch-api y su MCP | .kicad_sch real (7/8 declarado) | Joven, un equipo pequeño, VERIFIED |
 | **FreeRouting MCP** | En README oficial 2026 | Integración MCP para agentes IA | vía DSN/SES | Beta, VERIFIED |
 
 - https://atopile.io/ · https://pypi.org/project/atopile/
