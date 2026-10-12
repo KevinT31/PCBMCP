@@ -247,7 +247,9 @@ def build_model() -> BoardModel:
     parts.append(
         Part(
             reference="U3",
-            lib_id="Sensor_Temperature:LM75B",
+            # LM75B es alias de LM75C en KiCad 10. El generador expande el alias
+            # y KiCad marca la copia embebida como lib_symbol_mismatch.
+            lib_id="Sensor_Temperature:LM75C",
             value="LM75BD",
             position=(45.72, 165.10),
             footprint="Package_SO:SOIC-8_3.9x4.9mm_P1.27mm",

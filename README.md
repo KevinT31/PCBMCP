@@ -20,7 +20,7 @@ El esquema actual está en `hardware/demo-vigia/`. El generador protege los arch
 ## Estado
 
 - La especificación, el modelo y las pruebas automatizadas están disponibles.
-- El ERC del esquema entregado tiene **un aviso** `lib_symbol_mismatch` para `Sensor_Temperature:LM75B`: la biblioteca de KiCad define este símbolo como alias de LM75C y la copia embebida por `kicad-sch-api` queda expandida. Se requiere actualizar el símbolo con KiCad y volver a verificar el ERC antes de tratar el esquema como cerrado.
+- El ERC del esquema entregado tiene **cero infracciones** con KiCad 10. El modelo usa el símbolo base `Sensor_Temperature:LM75C` para el componente `LM75BD`, ya que `LM75B` es un alias que el generador no embebe de forma idéntica a la biblioteca.
 - El PCB, la simulación completa y el paquete de fabricación aún no están implementados. No fabricar desde este repositorio sin completar esas etapas.
 
 La arquitectura y las decisiones de componentes están en `docs/`; las pruebas de humo y los reportes están en `reports/`.

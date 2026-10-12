@@ -64,6 +64,8 @@ def test_ldo_enable_tied_to_vin(model):
 
 def test_lm75b_address_0x48(model):
     u3 = model.part("U3")
+    assert u3.lib_id == "Sensor_Temperature:LM75C"
+    assert u3.value == "LM75BD"
     assert u3.pins["5"] == u3.pins["6"] == u3.pins["7"] == "GND"
 
 
