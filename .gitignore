@@ -30,3 +30,7 @@ credentials*.json
 # SO
 Thumbs.db
 Desktop.ini
+
+# Configuración local de herramientas de desarrollo
+.claude/
+.codex/

@@ -1,6 +1,6 @@
 # Herramientas comerciales/AI de EDA — Evaluación objetiva (julio 2026)
 
-**Contexto:** estudio comparativo para un pipeline agéntico local (Claude Code + KiCad + MCP + Python, Windows 11) que va de requisitos en lenguaje natural → esquemático → PCB → fabricación.
+**Contexto:** estudio comparativo para un pipeline agéntico local (KiCad + MCP + Python, Windows 11) que va de requisitos en lenguaje natural → esquemático → PCB → fabricación.
 **Restricciones:** sin subir IP a cloud, sin crear cuentas, sin comprar. Solo investigación pública.
 **Etiquetas:** `VERIFIED` = confirmado en documentación oficial, foros o prensa técnica independiente. `INFERRED` = deducción razonable de evidencia parcial. `UNVERIFIED` = afirmación de marketing o dato no confirmable sin cuenta.
 
@@ -88,7 +88,7 @@ Filosóficamente es lo más cercano al pipeline del usuario (código → esquem�
 - `VERIFIED` Enterprise, acceso solo con demo comercial; genera opciones de diseño optimizando componentes por coste/tamaño/consumo. Sin acceso público. Veredicto: **descartar**.
 
 ### Diode Computers (YC)
-- `VERIFIED` (review eddiesamuels) Diseño por código con DSL propio ("Zener"), exporta a KiCad; buen tooling de visualización y pedido; colaboración con Anthropic. Aún inmaduro. Veredicto: **vigilar**, no integrar.
+- `VERIFIED` (review eddiesamuels) Diseño por código con DSL propio ("Zener"), exporta a KiCad; buen tooling de visualización y pedido; integración con servicios de IA. Aún inmaduro. Veredicto: **vigilar**, no integrar.
 
 ### tscircuit — open source, relevante
 - `VERIFIED` Circuitos como componentes React/TypeScript; MIT/open source; registry de paquetes npm; **importa/exporta KiCad** (incl. librerías vía KiCad PCM); documentación oficial de "circuit generation with AI" y un **MCP server del registry** — es decir, integración directa con agentes tipo Claude Code/Codex (demo pública de Adafruit, mayo-2026).
@@ -139,5 +139,5 @@ Filosóficamente es lo más cercano al pipeline del usuario (código → esquem�
 - Quilter: quilter.ai/pricing · HN 46294254 (dic-2025, placa Linux 843 componentes) · blog quilter.ai (marketing, usado solo como autodescripción)
 - JITX: jitx.com · blog.jitx.com "What's new in JITX 2025" y FAQ · docs.jitx.com/cad-integration · github.com/JITx-Inc
 - Review independiente multiherramienta: eddiesamuels.com/blog/ai-pcbs (jun-2026)
-- Otros: deeppcb.ai · instadeep.com · protoflow.ai/compare · docs.tscircuit.com · pypi.org/project/atopile · blog.adafruit.com (tscircuit+Codex, mayo-2026)
+- Otros: deeppcb.ai · instadeep.com · protoflow.ai/compare · docs.tscircuit.com · pypi.org/project/atopile · blog.adafruit.com (tscircuit, mayo-2026)
 - APIs: nexar.com/api y compare-plans · mouser.com/api-hub · developer.digikey.com · api.jlcpcb.com · lcsc.com/faqs/api
