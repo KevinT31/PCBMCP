@@ -20,6 +20,7 @@ _autosave-*
 # Salidas regenerables (las de manufacturing/ SÍ se versionan)
 artifacts/tmp/
 reports/tmp/
+sandbox/erc_bisect/
 
 # Secretos
 .env

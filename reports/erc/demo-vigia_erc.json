@@ -1,0 +1,52 @@
+{
+    "$schema": "https://schemas.kicad.org/erc.v1.json",
+    "coordinate_units": "mm",
+    "date": "2026-10-11T23:26:21",
+    "ignored_checks": [
+        {
+            "description": "Global label only appears once in the schematic",
+            "key": "single_global_label"
+        },
+        {
+            "description": "Four connection points are joined together",
+            "key": "four_way_junction"
+        },
+        {
+            "description": "SPICE model issue",
+            "key": "simulation_model_issue"
+        },
+        {
+            "description": "Assigned footprint doesn't match footprint filters",
+            "key": "footprint_filter"
+        }
+    ],
+    "included_severities": [
+        "error",
+        "warning"
+    ],
+    "kicad_version": "10.0.3",
+    "sheets": [
+        {
+            "path": "/",
+            "uuid_path": "/b6957e44-d195-4221-a1b1-24b2de0ac3ba",
+            "violations": [
+                {
+                    "description": "El símbolo 'LM75B' no coincide con la copia en la biblioteca 'Sensor_Temperature'",
+                    "items": [
+                        {
+                            "description": "Símbolo U3 [LM75B]",
+                            "pos": {
+                                "x": 0.4572,
+                                "y": 1.651
+                            },
+                            "uuid": "6e45784a-b346-42f4-b310-fb1ff2953626"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_mismatch"
+                }
+            ]
+        }
+    ],
+    "source": "demo-vigia.kicad_sch"
+}
